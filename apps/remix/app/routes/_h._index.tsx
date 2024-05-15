@@ -275,15 +275,6 @@ export default function Index() {
               className="py-2.5 rounded-md w-full bg-cyan-600 hover:opacity-90 disabled:cursor-not-allowed disabled:bg-zinc-500">
               {t("Stop")}
             </button>
-
-            <div className="text-sm text-gray-300 mt-4">
-              {t("Vmail sender is beta now. ")}
-              <span
-                onClick={() => setShowSenderModal(true)}
-                className="text-cyan-500 cursor-pointer">
-                {t("Try it")}.
-              </span>
-            </div>
           </Form>
         )}
 
