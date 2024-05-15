@@ -14,7 +14,7 @@ export default function Header() {
       </Link>
       <Link
         to="/about"
-        className="ml-3 md:ml-8 text-sm md:text-base hidden md:block">
+        className="ml-auto text-sm md:text-base hidden md:block">
         {t("About")}
       </Link>
       <Link
