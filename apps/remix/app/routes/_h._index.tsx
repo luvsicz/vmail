@@ -177,7 +177,7 @@ export const action: ActionFunction = async ({ request }) => {
         ],
       }),
     });
-    console.log("[res]", res.status);
+    console.log("[res]:", res.status);
     return redirect("/");
   } else if (_action === "login") {
     let psd = formData.get("password") as string;
