@@ -134,7 +134,9 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     const mailbox = `${randomName("", getRandomCharacter())}@${domains.length > 1 ? selectDomain : domains[0]}`;
+    console.log("mailbox:"+mailbox)
     const userMailbox = await userMailboxCookie.serialize(mailbox);
+    console.log("userMailbox:"+mailbox)
     return redirect("/", {
       headers: {
         "Set-Cookie": userMailbox,
@@ -175,7 +177,7 @@ export const action: ActionFunction = async ({ request }) => {
         ],
       }),
     });
-    // console.log("[res]", res.status);
+    console.log("[res]", res.status);
     return redirect("/");
   } else if (_action === "login") {
     let psd = formData.get("password") as string;
