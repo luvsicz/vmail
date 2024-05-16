@@ -92,7 +92,9 @@ export const action: ActionFunction = async ({ request }) => {
     }
   } else if (_action === "create") {
     if (siteKey) {
+      console.log("siteKey:"+siteKey)
       const response = formData.get("cf-turnstile-response");
+      console.log("response:"+response)
       if (!response) {
         return {
           error: "No captcha response",
@@ -111,7 +113,9 @@ export const action: ActionFunction = async ({ request }) => {
           "Content-Type": "application/json",
         },
       });
+      console.log("resp:"+resp)
       const data = await resp.json();
+      console.log("data:"+data)
       if (!data.success) {
         return {
           error: "Failed to verify captcha",
