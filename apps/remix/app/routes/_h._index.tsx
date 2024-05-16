@@ -136,7 +136,7 @@ export const action: ActionFunction = async ({ request }) => {
     const mailbox = `${randomName("", getRandomCharacter())}@${domains.length > 1 ? selectDomain : domains[0]}`;
     console.log("mailbox:"+mailbox)
     const userMailbox = await userMailboxCookie.serialize(mailbox);
-    console.log("userMailbox:"+mailbox)
+    console.log("userMailbox:"+userMailbox)
     return redirect("/", {
       headers: {
         "Set-Cookie": userMailbox,
