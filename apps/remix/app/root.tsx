@@ -45,6 +45,7 @@ export default function App() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
+        <script defer src="https://cloud.umami.is/script.js" data-website-id="402074c6-2eac-4a16-b8ef-e8362a56b41c"></script>
       </head>
       <body className="">
         <Outlet />
