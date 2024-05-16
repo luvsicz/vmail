@@ -32,6 +32,9 @@ export let handle = {
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
+export const config = {
+  maxDuration: 60,
+};
 
 export default function App() {
   let { locale } = useLoaderData<typeof loader>();
