@@ -30,7 +30,7 @@ export default function Header() {
       <Link
         to="https://analytics.us.umami.is/websites/402074c6-2eac-4a16-b8ef-e8362a56b41c"
         target="_blank"
-        className="ml-auto text-sm md:text-base hidden md:block">
+        className="ml-3 md:ml-8 text-sm md:text-base hidden md:block">
         {t("Umami")}
       </Link>
     </div>
