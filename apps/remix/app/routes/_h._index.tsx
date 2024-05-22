@@ -113,9 +113,7 @@ export const action: ActionFunction = async ({ request }) => {
           "Content-Type": "application/json",
         },
       });
-      console.log("resp:"+resp)
       const data = await resp.json();
-      console.log("data:"+data)
       if (!data.success) {
         return {
           error: "Failed to verify captcha",
