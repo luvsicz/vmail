@@ -92,7 +92,9 @@ export const action: ActionFunction = async ({ request }) => {
     }
   } else if (_action === "create") {
     if (siteKey) {
+      console.log("siteKey:"+siteKey)
       const response = formData.get("cf-turnstile-response");
+      console.log("response:"+response)
       if (!response) {
         return {
           error: "No captcha response",
@@ -134,7 +136,9 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     const mailbox = `${randomName("", getRandomCharacter())}@${domains.length > 1 ? selectDomain : domains[0]}`;
+    console.log("mailbox:"+mailbox)
     const userMailbox = await userMailboxCookie.serialize(mailbox);
+    console.log("userMailbox:"+userMailbox)
     return redirect("/", {
       headers: {
         "Set-Cookie": userMailbox,
@@ -175,7 +179,7 @@ export const action: ActionFunction = async ({ request }) => {
         ],
       }),
     });
-    // console.log("[res]", res.status);
+    // console.log("[res]:", res.status);
     return redirect("/");
   } else if (_action === "login") {
     let psd = formData.get("password") as string;
@@ -275,15 +279,6 @@ export default function Index() {
               className="py-2.5 rounded-md w-full bg-cyan-600 hover:opacity-90 disabled:cursor-not-allowed disabled:bg-zinc-500">
               {t("Stop")}
             </button>
-
-            <div className="text-sm text-gray-300 mt-4">
-              {t("Vmail sender is beta now. ")}
-              <span
-                onClick={() => setShowSenderModal(true)}
-                className="text-cyan-500 cursor-pointer">
-                {t("Try it")}.
-              </span>
-            </div>
           </Form>
         )}
 
