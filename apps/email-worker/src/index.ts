@@ -19,6 +19,12 @@ export default {
 			const mail = await new PostalMime().parse(rawText);
 			const now = new Date();
 			const db = getWebTursoDB(env.TURSO_DB_URL, env.TURSO_DB_AUTH_TOKEN);
+			
+			// Convert replyTo field from object to array if it is an object
+			if (mail.replyTo && !Array.isArray(mail.replyTo)) {
+				mail.replyTo = [mail.replyTo];
+			}
+
 			const newEmail: InsertEmail = {
 				id: nanoid(),
 				messageFrom,
@@ -30,7 +36,7 @@ export default {
 			const email = insertEmailSchema.parse(newEmail);
 			await insertEmail(db, email);
 		} catch (e) {
-			console.log(e);
+			console.log("insert mail:"+e);
 		}
 	},
 };

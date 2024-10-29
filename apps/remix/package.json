@@ -19,6 +19,7 @@
     "@remix-run/react": "^2.5.0",
     "@remix-run/serve": "^2.5.0",
     "@scaleway/random-name": "^4.0.2",
+    "@vercel/analytics": "^1.2.2",
     "database": "workspace:^",
     "framer-motion": "^11.0.24",
     "i18next": "^23.10.1",
