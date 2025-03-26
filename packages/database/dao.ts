@@ -44,6 +44,7 @@ export async function getEmailByPassword(db: LibSQLDatabase, id: string) {
       .execute();
     return result[0];
   } catch (e) {
+    console.error("Error in getEmailByPassword:", e); // Log the error message
     return null;
   }
 }
