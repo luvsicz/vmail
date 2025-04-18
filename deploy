@@ -1,0 +1,41 @@
+#!/bin/bash
+# 检查参数数量
+if [ $# -ne 1 ]; then
+  echo "使用方法: deploy <版本哈希值>"
+  exit 1
+fi
+# 获取参数
+versionHash="$1"
+# 获取最新提交点
+latestCommit=$(git rev-parse HEAD)
+# 生成 patch 文件
+git format-patch --stdout "$versionHash".."$latestCommit" > update.patch
+# 切换到指定版本
+git checkout "$versionHash" || exit 1
+# 应用 patch
+git apply update.patch || exit 1
+# 获取 commit message
+read -p "请输入提交信息: " commitMsg
+# 提交所有变动
+git commit  -am "$commitMsg" || exit 1
+# 提示用户输入分支名
+read -p "请输入要推送的分支名称 (默认: main): " branchName
+# 设置默认分支名
+if [[ -z "$branchName" ]]; then
+  branchName="main"
+fi
+# 提示用户确认，默认值为 "y"
+read -p "强制推送至远程分支 '$branchName'？ (Y/n): " confirm
+if [[ -z "$confirm" ]]; then
+  confirm="y"
+fi
+# 判断用户输入
+if [[ "$confirm" =~ ^[Yy]$ ]]; then
+  # 强制推送
+  git push --force-with-lease origin HEAD:"$branchName"
+  echo "已成功强制推送至分支 HEAD '$branchName'！"
+else
+  echo "已取消强制推送。"
+fi
+exit 0
+
