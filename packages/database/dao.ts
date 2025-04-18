@@ -35,6 +35,8 @@ export async function getEmail(db: LibSQLDatabase, id: string) {
 }
 
 export async function getEmailByPassword(db: LibSQLDatabase, id: string) {
+  console.log("[DB] Starting getEmailByPassword query for id:", id);
+  const startTime = Date.now();
   try {
     const result = await db
       .select({ messageTo: emails.messageTo })
@@ -42,9 +44,19 @@ export async function getEmailByPassword(db: LibSQLDatabase, id: string) {
       .where(and(eq(emails.id, id)))
       .limit(1)
       .execute();
+    
+    const duration = Date.now() - startTime;
+    console.log("[DB] getEmailByPassword query completed in", duration, "ms");
+    if (result.length === 0) {
+      console.log("[DB] No email found for the provided password");
+    } else {
+      console.log("[DB] Email found for password, messageTo:", result[0]?.messageTo);
+    }
+    
     return result[0];
   } catch (e) {
-    console.error("Error in getEmailByPassword:", e); // Log the error message
+    const duration = Date.now() - startTime;
+    console.error("[DB] Error in getEmailByPassword after", duration, "ms:", e);
     return null;
   }
 }
@@ -53,14 +65,24 @@ export async function getEmailsByMessageTo(
   db: LibSQLDatabase,
   messageTo: string
 ) {
+  console.log("[DB] Starting getEmailsByMessageTo query for:", messageTo);
+  const startTime = Date.now();
   try {
-    return await db
+    const result = await db
       .select()
       .from(emails)
       .where(eq(emails.messageTo, messageTo))
       .orderBy(desc(emails.createdAt))
       .execute();
+    
+    const duration = Date.now() - startTime;
+    console.log("[DB] getEmailsByMessageTo query completed in", duration, "ms");
+    console.log("[DB] Returned", result.length, "emails");
+    
+    return result;
   } catch (e) {
+    const duration = Date.now() - startTime;
+    console.error("[DB] Error in getEmailsByMessageTo after", duration, "ms:", e);
     return [];
   }
 }

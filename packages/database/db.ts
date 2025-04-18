@@ -10,5 +10,15 @@ export function getWebTursoDBFromEnv(): LibSQLDatabase {
 }
 
 export function getWebTursoDB(url: string, authToken: string): LibSQLDatabase {
-  return drizzle(createWebClient({ url, authToken }));
+  console.log("[DB Connection] Creating database client with URL:", url);
+  const startTime = Date.now();
+  try {
+    const client = createWebClient({ url, authToken });
+    const db = drizzle(client);
+    console.log("[DB Connection] Database client created successfully in", Date.now() - startTime, "ms");
+    return db;
+  } catch (error) {
+    console.error("[DB Connection] Error creating database client after", Date.now() - startTime, "ms:", error);
+    throw error; // Re-throw to allow proper error handling upstream
+  }
 }

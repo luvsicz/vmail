@@ -44,10 +44,22 @@ export function MailItem({ mail: item }: { mail: Email }) {
 }
 
 async function fetchMails() {
+  console.log("[Client] Starting fetch for /api/mails at", new Date().toISOString());
+  const startTime = Date.now();
   try {
+    console.log("[Client] Sending fetch request to /api/mails");
     const resp = await fetch("/api/mails");
-    return await resp.json();
+    console.log("[Client] Received response from /api/mails in", Date.now() - startTime, "ms, status:", resp.status);
+    
+    const startParse = Date.now();
+    const data = await resp.json();
+    console.log("[Client] Parsed JSON response in", Date.now() - startParse, "ms");
+    console.log("[Client] Total fetch operation completed in", Date.now() - startTime, "ms");
+    console.log("[Client] Received", data.length, "emails");
+    
+    return data;
   } catch (e) {
+    console.error("[Client] Error fetching mails after", Date.now() - startTime, "ms:", e);
     return [];
   }
 }
