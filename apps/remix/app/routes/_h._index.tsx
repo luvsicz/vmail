@@ -175,31 +175,61 @@ export const action: ActionFunction = async ({ request }) => {
         ],
       }),
     });
-    // console.log("[res]", res.status);
     return redirect("/");
   } else if (_action === "login") {
+    console.log("[LOGIN] Login action started");
     let psd = formData.get("password") as string;
     if (!psd) {
+      console.log("[LOGIN] No password provided");
       return {
         error: "Password is required",
       };
     }
+    console.log(`[LOGIN] Password length: ${psd.length}`);
+    
+    console.log("[LOGIN] Creating database connection");
+    const startDbConnection = Date.now();
     const db = getWebTursoDB(
       process.env.TURSO_DB_URL as string,
       process.env.TURSO_DB_RO_AUTH_TOKEN as string
     );
-    const res = await getEmailByPassword(db, psd);
-    if (!res) {
+    console.log(`[LOGIN] Database connection created in ${Date.now() - startDbConnection}ms`);
+    
+    try {
+      console.log("[LOGIN] Querying database for email by password");
+      const startDbQuery = Date.now();
+      const res = await getEmailByPassword(db, psd);
+      console.log(`[LOGIN] Database query completed in ${Date.now() - startDbQuery}ms`);
+      
+      if (!res) {
+        console.log("[LOGIN] No email found for the provided password");
+        return {
+          error: "Invalid password",
+        };
+      }
+      
+      console.log("[LOGIN] Email found, serializing cookie");
+      const startCookieSerialization = Date.now();
+      const userMailbox = await userMailboxCookie.serialize(res.messageTo);
+      console.log(`[LOGIN] Cookie serialization completed in ${Date.now() - startCookieSerialization}ms`);
+      
+      console.log("[LOGIN] Redirecting with cookie");
+      return redirect("/", {
+        headers: {
+          "Set-Cookie": userMailbox,
+        },
+      });
+    } catch (error) {
+      console.error("[LOGIN] Error in login action:", error);
+      if (error instanceof Error) {
+        console.error("[LOGIN] Error name:", error.name);
+        console.error("[LOGIN] Error message:", error.message);
+        console.error("[LOGIN] Error stack:", error.stack);
+      }
       return {
-        error: "Invalid password",
+        error: "An error occurred while processing your request",
       };
     }
-    const userMailbox = await userMailboxCookie.serialize(res.messageTo);
-    return redirect("/", {
-      headers: {
-        "Set-Cookie": userMailbox,
-      },
-    });
   } else {
     return {
       error: "Invalid action",
@@ -275,15 +305,6 @@ export default function Index() {
               className="py-2.5 rounded-md w-full bg-cyan-600 hover:opacity-90 disabled:cursor-not-allowed disabled:bg-zinc-500">
               {t("Stop")}
             </button>
-
-            <div className="text-sm text-gray-300 mt-4">
-              {t("Vmail sender is beta now. ")}
-              <span
-                onClick={() => setShowSenderModal(true)}
-                className="text-cyan-500 cursor-pointer">
-                {t("Try it")}.
-              </span>
-            </div>
           </Form>
         )}
 

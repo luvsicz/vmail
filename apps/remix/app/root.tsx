@@ -1,4 +1,5 @@
 import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import { Analytics } from "@vercel/analytics/react"
 import {
   Links,
   LiveReload,
@@ -31,6 +32,9 @@ export let handle = {
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ];
+export const config = {
+  maxDuration: 10,
+};
 
 export default function App() {
   let { locale } = useLoaderData<typeof loader>();
@@ -44,24 +48,14 @@ export default function App() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-39WSEGK1FQ"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-39WSEGK1FQ');
-            `,
-          }}></script>
+        <script defer src="https://umami.way2free.eu.org/script.js" data-website-id="298a5bbd-1c3d-40ce-997c-ed2a992d522e"></script>
       </head>
       <body className="">
         <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <Analytics />
       </body>
     </html>
   );

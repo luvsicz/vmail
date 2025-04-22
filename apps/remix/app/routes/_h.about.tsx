@@ -46,9 +46,9 @@ export default function Index() {
         </h2>
         <p className="mt-4">
           All copyrights belong to{" "}
-          <a href="https://vmail.dev" rel="nofollow">
+          {/* <a href="https://vmail.dev" rel="nofollow"> */}
             <strong>Vmail.DEV </strong>{" "}
-          </a>
+          {/* </a> */}
           .{" "}
         </p>
       </div>

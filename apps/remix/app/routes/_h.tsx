@@ -7,7 +7,7 @@ export default function HomeLayout() {
     <div className="mx-auto min-h-screen flex flex-col bg-[#1f2023]">
       <Header />
       <Outlet />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

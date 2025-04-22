@@ -24,21 +24,26 @@ app.use("*", cors());
 
 async function withMailbox(c: Context, next: Next) {
   try {
+    console.log(`[EMAIL_API] withMailbox: Checking Authorization header`);
     const authHeader = c.req.header("Authorization");
     if (!authHeader) {
+      console.log(`[EMAIL_API][ERROR] Missing Authorization header`);
       return c.json({ error: "Missing Authorization header" }, 401);
     }
     const token = authHeader.split(" ")[1];
     const { payload } = await jose.jwtVerify(token, c.env.JWT_SECRET);
+    console.log(`[EMAIL_API] withMailbox: mailbox extracted: ${payload.mailbox}`);
     c.set("mailbox", payload.mailbox);
     return next();
   } catch (e) {
+    console.log(`[EMAIL_API][ERROR] withMailbox: ${e instanceof Error ? e.message : String(e)}`);
     return c.json({ error: "Failed to verify" }, 400);
   }
 }
 
 async function withTurnstile(c: Context, next: Next) {
   try {
+    console.log(`[EMAIL_API] withTurnstile: Checking cf-turnstile-response`);
     let token: string | undefined;
     switch (c.req.header("content-type")) {
       case "application/x-www-form-urlencoded":
@@ -51,6 +56,7 @@ async function withTurnstile(c: Context, next: Next) {
         token = c.req.query("cf-turnstile-response");
     }
     if (!token || typeof token !== "string") {
+      console.log(`[EMAIL_API][ERROR] withTurnstile: Missing cf-turnstile-response`);
       return c.json({ error: "Missing cf-turnstile-response" }, 400);
     }
     const res = await fetch(
@@ -66,19 +72,24 @@ async function withTurnstile(c: Context, next: Next) {
       }
     );
     if (!res.ok) {
+      console.log(`[EMAIL_API][ERROR] withTurnstile: Cloudflare siteverify failed`);
       return c.json({ error: "Failed to verify" }, 400);
     }
     const json = (await res.json()) as { success: boolean };
     if (!json.success) {
+      console.log(`[EMAIL_API][ERROR] withTurnstile: Verification not successful`);
       return c.json({ error: "Failed to verify" }, 400);
     }
+    console.log(`[EMAIL_API] withTurnstile: Verification successful`);
     return next();
   } catch (e) {
+    console.log(`[EMAIL_API][ERROR] withTurnstile: ${e instanceof Error ? e.message : String(e)}`);
     return c.json({ error: "Failed to verify" }, 400);
   }
 }
 
 app.post("/mailbox", withTurnstile, async (c) => {
+  console.log(`[EMAIL_API] POST /mailbox: Creating mailbox and JWT`);
   const jwtSecret = new TextEncoder().encode(c.env.JWT_SECRET);
   const name = randomName("", ".");
   const domain = c.env.EMAIL_DOMAIN || "";
@@ -87,13 +98,16 @@ app.post("/mailbox", withTurnstile, async (c) => {
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("2h")
     .sign(jwtSecret);
+  console.log(`[EMAIL_API] POST /mailbox: mailbox=${mailbox}`);
   return c.json({ mailbox, token });
 });
 
 app.get("/mails", withMailbox, async (c) => {
   const mailbox = c.get("mailbox");
+  console.log(`[EMAIL_API] GET /mails: mailbox=${mailbox}`);
   const db = getWebTursoDB(c.env.TURSO_DB_URL, c.env.TURSO_DB_RO_AUTH_TOKEN);
   const mails = await getEmailsByMessageTo(db, mailbox);
+  console.log(`[EMAIL_API] GET /mails: found ${mails.length} mails`);
   return c.json(mails);
 });
 
