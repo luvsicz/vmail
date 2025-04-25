@@ -1,7 +1,7 @@
 import { MetaFunction, type LoaderFunction } from "@remix-run/node";
 import { Link, useLoaderData, useRouteError } from "@remix-run/react";
 import { getEmail } from "database/dao";
-import { getWebTursoDB } from "database/db";
+import { getDatabaseFromEnv, } from "database/db";
 import { format } from "date-fns/format";
 import { ArrowUturnLeft, UserCircleIcon } from "icons";
 import { useTranslation } from "react-i18next";
@@ -19,10 +19,7 @@ export const meta: MetaFunction = () => {
 
 export const loader: LoaderFunction = async ({ params }) => {
   const id = params.id;
-  const db = getWebTursoDB(
-    process.env.TURSO_DB_URL as string,
-    process.env.TURSO_DB_RO_AUTH_TOKEN as string
-  );
+  const db = getDatabaseFromEnv();
   if (!id) {
     throw new Error("No mail id provided");
   }

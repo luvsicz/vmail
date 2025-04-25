@@ -35,7 +35,7 @@ export const emails = sqliteTable("emails", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
-const AddressSchema = z.object({
+export const AddressSchema = z.object({
   address: z.string(),
   name: z.string(),
 });

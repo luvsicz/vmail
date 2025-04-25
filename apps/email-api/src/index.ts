@@ -1,5 +1,5 @@
 import { getEmailsByMessageTo } from "database/dao";
-import { getWebTursoDB } from "database/db";
+import { getDatabaseFromEnv } from "database/db";
 import { Context, Hono, Next } from "hono";
 import { cors } from "hono/cors";
 import * as jose from "jose";
@@ -7,8 +7,6 @@ import * as jose from "jose";
 import randomName from "@scaleway/random-name";
 
 type Bindings = {
-  TURSO_DB_URL: string;
-  TURSO_DB_RO_AUTH_TOKEN: string;
   JWT_SECRET: string;
   TURNSTILE_SECRET: string;
   EMAIL_DOMAIN: string;
@@ -105,7 +103,8 @@ app.post("/mailbox", withTurnstile, async (c) => {
 app.get("/mails", withMailbox, async (c) => {
   const mailbox = c.get("mailbox");
   console.log(`[EMAIL_API] GET /mails: mailbox=${mailbox}`);
-  const db = getWebTursoDB(c.env.TURSO_DB_URL, c.env.TURSO_DB_RO_AUTH_TOKEN);
+  // Use the new database API with explicit database type
+  const db = getDatabaseFromEnv();
   const mails = await getEmailsByMessageTo(db, mailbox);
   console.log(`[EMAIL_API] GET /mails: found ${mails.length} mails`);
   return c.json(mails);

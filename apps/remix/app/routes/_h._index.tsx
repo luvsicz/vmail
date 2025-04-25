@@ -13,7 +13,7 @@ import {
 } from "@remix-run/react";
 import randomName from "@scaleway/random-name";
 import { getEmailByPassword, getEmailsByMessageTo } from "database/dao";
-import { getWebTursoDB } from "database/db";
+import { getDatabaseFromEnv } from "database/db";
 
 import CopyButton from "../components/CopyButton";
 import MailListWithQuery from "../components/MailList";
@@ -57,10 +57,7 @@ export const loader: LoaderFunction = async ({ request }) => {
       domains,
     };
   }
-  const db = getWebTursoDB(
-    process.env.TURSO_DB_URL as string,
-    process.env.TURSO_DB_RO_AUTH_TOKEN as string
-  );
+  const db = getDatabaseFromEnv();
   const mails = await getEmailsByMessageTo(db, userMailbox);
   return {
     userMailbox,
@@ -178,7 +175,7 @@ export const action: ActionFunction = async ({ request }) => {
     return redirect("/");
   } else if (_action === "login") {
     console.log("[LOGIN] Login action started");
-    let psd = formData.get("password") as string;
+    const psd = formData.get("password") as string;
     if (!psd) {
       console.log("[LOGIN] No password provided");
       return {
@@ -189,10 +186,7 @@ export const action: ActionFunction = async ({ request }) => {
     
     console.log("[LOGIN] Creating database connection");
     const startDbConnection = Date.now();
-    const db = getWebTursoDB(
-      process.env.TURSO_DB_URL as string,
-      process.env.TURSO_DB_RO_AUTH_TOKEN as string
-    );
+    const db =getDatabaseFromEnv();
     console.log(`[LOGIN] Database connection created in ${Date.now() - startDbConnection}ms`);
     
     try {
