@@ -3,15 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "sqlite": "drizzle-kit generate:sqlite"
+    "sqlite": "drizzle-kit generate:sqlite",
+    "postgres": "drizzle-kit generate:pg --config=drizzle.config.pg.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@libsql/client": "0.4.0-pre.7",
+    "@neondatabase/serverless": "^1.0.0",
     "drizzle-orm": "^0.29.3",
     "drizzle-zod": "^0.5.1",
+    "postgres": "^3.4.5",
     "zod": "^3.22.4"
   },
   "devDependencies": {

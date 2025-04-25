@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@marsidev/react-turnstile": "^0.4.1",
+    "@neondatabase/serverless": "^1.0.0",
     "@remix-run/cloudflare": "^2.5.0",
     "@remix-run/cloudflare-pages": "^2.5.0",
     "@remix-run/node": "^2.5.0",
@@ -28,6 +29,7 @@
     "i18next-http-backend": "^2.5.0",
     "icons": "workspace:^",
     "isbot": "^4.1.0",
+    "postgres": "^3.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",

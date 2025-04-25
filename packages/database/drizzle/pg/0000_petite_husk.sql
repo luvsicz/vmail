@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS "emails" (
+	"id" text PRIMARY KEY NOT NULL,
+	"message_from" text NOT NULL,
+	"message_to" text NOT NULL,
+	"headers" jsonb NOT NULL,
+	"from" jsonb NOT NULL,
+	"sender" jsonb,
+	"reply_to" jsonb,
+	"delivered_to" text,
+	"return_path" text,
+	"to" jsonb,
+	"cc" jsonb,
+	"bcc" jsonb,
+	"subject" text,
+	"message_id" text NOT NULL,
+	"in_reply_to" text,
+	"references" text,
+	"date" text,
+	"html" text,
+	"text" text,
+	"created_at" timestamp NOT NULL,
+	"updated_at" timestamp NOT NULL
+);

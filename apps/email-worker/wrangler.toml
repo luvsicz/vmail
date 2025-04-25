@@ -1,16 +1,37 @@
-name = "email-worker"
+name = "vmail-worker"
 main = "src/index.ts"
-compatibility_date = "2023-12-18"
+compatibility_date = "2025-04-02"
+compatibility_flags = ["nodejs_compat"]
+# disable workers dev url
+workers_dev = false
+# disable preview url
+preview_urls = false
 
+# Environment variables for database configuration
 [vars]
-TURSO_DB_AUTH_TOKEN = ""
-TURSO_DB_URL = ""
-EMAIL_DOMAIN = "vmail.dev"
+# Database configuration
+# Set DATABASE_TYPE to either "turso" (default) or "pg" (for PostgreSQL)
+DATABASE_TYPE = "pg"  
 
-# [[d1_databases]]
-# binding = "DB"
-# database_name = ""
-# database_id = ""
+# For Turso database (default)
+TURSO_DB_URL = ""        # Required when DATABASE_TYPE is "turso"
+TURSO_DB_AUTH_TOKEN = "" # Required when DATABASE_TYPE is "turso"
+
+# For PostgreSQL database
+DATABASE_URL = ""        # Required when DATABASE_TYPE is "pg" - PostgreSQL connection string
+
+# Other configuration
+EMAIL_DOMAIN = "way2free.eu.org"        # Domain for email addresses
+DB = ""          # D1 database binding (if used)
+
+[observability]
+enabled = true
+head_sampling_rate = 1 # optional. default = 1.
+
+[[d1_databases]]
+binding = ""
+database_name = ""
+database_id = ""
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Note: Use secrets to store sensitive data.
