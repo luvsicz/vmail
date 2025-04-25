@@ -38,7 +38,7 @@ export function isSQLiteDB(db: DrizzleDB): db is LibSQLDatabase {
  */
 export function getDatabaseFromEnv(): DrizzleDB {
   const dbType = (process.env.DATABASE_TYPE || 'turso').toLowerCase();
-  console.warn(`Database type: ${dbType}`);
+  console.log(`Database type: ${dbType}`);
   switch (dbType) {
     case DatabaseType.TURSO:
       return getTursoDatabaseFromEnv();
